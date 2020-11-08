@@ -277,12 +277,7 @@ abstract class Enum implements JsonSerializable
    */
   public function all(): array
   {
-    return array_map(
-      fn ($name) => static::$name(),
-      array_keys(
-        self::toValues()
-      )
-    );
+    return array_values(self::enumMembers());
   }
 
   /**
