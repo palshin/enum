@@ -1,0 +1,41 @@
+{
+  "name": "palshin/php-package-skeleton",
+  "description": "Template repository for creating PHP packages",
+  "type": "library",
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "Eugene Palshin",
+      "email": "eo.palshin@gmail.com"
+    }
+  ],
+  "minimum-stability": "dev",
+  "prefer-stable": true,
+  "autoload": {
+    "psr-4": {
+      "Palshin\\PhpPackageSkeleton\\": "src"
+    }
+  },
+  "autoload-dev": {
+    "psr-4": {
+      "Palshin\\PhpPackageSkeleton\\Tests\\": "tests"
+    }
+  },
+  "require": {
+    "php": "^7.4"
+  },
+  "config": {
+    "sort-packages": true
+  },
+  "require-dev": {
+    "friendsofphp/php-cs-fixer": "^2.16",
+    "phpunit/phpunit": "^9.4",
+    "vimeo/psalm": "^4.1"
+  },
+  "scripts": {
+    "format": "vendor/bin/php-cs-fixer fix --allow-risky=yes",
+    "analyze": "vendor/bin/psalm",
+    "test": "vendor/bin/phpunit",
+    "test-coverage": "vendor/bin/phpunit --coverage-html coverage"
+  }
+}
