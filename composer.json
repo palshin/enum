@@ -1,6 +1,6 @@
 {
   "name": "palshin/php-package-skeleton",
-  "description": "Template repository for creating PHP packages",
+  "description": "Powerful enum library for PHP",
   "type": "library",
   "license": "MIT",
   "authors": [
@@ -13,16 +13,17 @@
   "prefer-stable": true,
   "autoload": {
     "psr-4": {
-      "Palshin\\PhpPackageSkeleton\\": "src"
+      "Palshin\\Enum\\": "src"
     }
   },
   "autoload-dev": {
     "psr-4": {
-      "Palshin\\PhpPackageSkeleton\\Tests\\": "tests"
+      "Palshin\\Enum\\Tests\\": "tests"
     }
   },
   "require": {
-    "php": "^7.4"
+    "php": "^7.4",
+    "ext-json": "*"
   },
   "config": {
     "sort-packages": true
