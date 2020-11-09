@@ -85,7 +85,7 @@ class EnumTest extends TestCase
   public function test_enum_member_string_represent()
   {
     $this->assertEquals(
-      '5',
+      DocCommentEnum::class . '::A',
       (string)DocCommentEnum::A()
     );
   }
@@ -143,5 +143,29 @@ class EnumTest extends TestCase
     $this->expectException(UndefinedPropertyEnumException::class);
     $enumMember = DocCommentEnum::A();
     $enumMember->vaLue;
+  }
+
+  public function test_can_access_name()
+  {
+    $this->assertEquals(
+      'BAR',
+      DocCommentEnum::BAR()->name
+    );
+  }
+
+  public function test_can_access_value()
+  {
+    $this->assertEquals(
+      'BAR',
+      DocCommentEnum::BAR()->value
+    );
+  }
+
+  public function test_can_access_label()
+  {
+    $this->assertEquals(
+      'BAR',
+      DocCommentEnum::BAR()->label
+    );
   }
 }

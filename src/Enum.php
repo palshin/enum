@@ -21,7 +21,7 @@ use TypeError;
 abstract class Enum implements JsonSerializable
 {
   /**
-   * @var array<string,static>
+   * @var array<string,array<string,static>>
    */
   private static $enumMembers = [];
 
@@ -49,15 +49,13 @@ abstract class Enum implements JsonSerializable
    * Enum constructor.
    * @param string $name
    * @param int|float|bool|string $value
-   * @param string $name
-   * @param $value
    */
   private function __construct(string $name, $value)
   {
     self::checkValue($value);
     $this->name = $name;
     $this->value = $value;
-    $this->label = static::labels()[$name] ?? '';
+    $this->label = static::labels()[$name] ?? $name;
     $this->description = static::descriptions()[$name] ?? null;
   }
 
@@ -126,7 +124,7 @@ abstract class Enum implements JsonSerializable
         [ EnumHelper::class, 'incrementValuesAfterFirst' ],
         EnumHelper::chunksBy(
           $values,
-          fn ($value, $key) => is_string($key)
+          fn ($_, $key) => is_string($key)
         )
       )
     );
@@ -285,7 +283,8 @@ abstract class Enum implements JsonSerializable
    */
   public function __toString(): string
   {
-    return (string)$this->value;
+    $enumClass = static::class;
+    return "$enumClass::{$this->name}";
   }
 
   /**
