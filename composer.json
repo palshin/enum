@@ -1,5 +1,5 @@
 {
-  "name": "palshin/php-package-skeleton",
+  "name": "epalshin/enum",
   "description": "Powerful enum library for PHP",
   "type": "library",
   "license": "MIT",
