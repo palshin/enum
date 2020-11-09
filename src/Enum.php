@@ -116,22 +116,28 @@ abstract class Enum implements JsonSerializable
     );
   }
 
+  /**
+   * @param array $values
+   * @return array<string,int|float|string|bool>
+   */
   private static function getAutoIncrementedValues(array $values): array
   {
-    return call_user_func_array(
-      'array_merge',
-      array_map(
-        [ EnumHelper::class, 'incrementValuesAfterFirst' ],
-        EnumHelper::chunksBy(
-          $values,
-          fn ($_, $key) => is_string($key)
-        )
-      )
-    );
+    $incrementedValues = [];
+    $initialValue = null;
+    foreach ($values as $key => $value) {
+      if (is_int($key)) {
+        $incrementedValues[$value] = $initialValue === null ? $value : ++$initialValue;
+      } else {
+        $incrementedValues[$key] = $value;
+        $initialValue = is_int($value) ? $value : null;
+      }
+    }
+
+    return $incrementedValues;
   }
 
   /**
-   * @return array<string,int|float|bool|string>
+   * @return array<string|int,int|float|bool|string>
    */
   protected static function values(): array
   {
@@ -273,7 +279,7 @@ abstract class Enum implements JsonSerializable
    * @return static[]
    * @throws ReflectionException
    */
-  public function all(): array
+  public static function all(): array
   {
     return array_values(self::enumMembers());
   }
@@ -284,6 +290,7 @@ abstract class Enum implements JsonSerializable
   public function __toString(): string
   {
     $enumClass = static::class;
+
     return "$enumClass::{$this->name}";
   }
 
