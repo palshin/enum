@@ -22,7 +22,7 @@ UserRole::MANAGER() === UserRole::MANAGER(); // true
 UserRole::MANAGER()->value; // 3
 UserRole::all(); // [ UserRole::CLIENT(), UserRole::ADMIN(), UserRole::MANAGER() ]
 UserRole::toValues(); // [ 'CLIENT' => 1, 'ADMIN' => 2, 'MANAGER' => 3 ]
-echo UserRole::CLIENT(); // print "UserRole::CLIENT
+echo UserRole::CLIENT(); // print "UserRole::CLIENT"
 echo json_encode(['enumMember' => UserRole::CLIENT()]); // print "{enumMember:1}"
 ```
 
