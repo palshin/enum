@@ -7,6 +7,7 @@ use Palshin\Enum\Exceptions\WritingToReadOnlyPropertyEnumException;
 use Palshin\Enum\Tests\Enums\AutoIncrementEnum;
 use Palshin\Enum\Tests\Enums\ConstEnum;
 use Palshin\Enum\Tests\Enums\DocCommentEnum;
+use Palshin\Enum\Tests\Enums\FullEnum;
 use Palshin\Enum\Tests\Enums\ValueEnum;
 use Palshin\Enum\Tests\Enums\WrongTypeEnum;
 use PHPUnit\Framework\TestCase;
@@ -145,11 +146,24 @@ class EnumTest extends TestCase
     $enumMember->vaLue;
   }
 
+  public function test_convert_to_json()
+  {
+    $this->assertJsonStringEqualsJsonString(
+      '{"BAR":"BAR"}',
+      json_encode(['BAR' => DocCommentEnum::BAR()])
+    );
+  }
+
+  public function test_values_func_override_doc_comment()
+  {
+    $this->assertEquals('FOO', FullEnum::A()->value);
+  }
+
   public function test_can_access_name()
   {
     $this->assertEquals(
-      'BAR',
-      DocCommentEnum::BAR()->name
+      'A',
+      FullEnum::A()->name
     );
   }
 
@@ -157,15 +171,23 @@ class EnumTest extends TestCase
   {
     $this->assertEquals(
       'BAR',
-      DocCommentEnum::BAR()->value
+      FullEnum::B()->value
     );
   }
 
   public function test_can_access_label()
   {
     $this->assertEquals(
-      'BAR',
-      DocCommentEnum::BAR()->label
+      'A Label',
+      FullEnum::A()->label
+    );
+  }
+
+  public function test_can_access_description()
+  {
+    $this->assertEquals(
+      'A description',
+      FullEnum::A()->description
     );
   }
 }
