@@ -30,7 +30,7 @@ echo json_encode(['enumMember' => UserRole::CLIENT()]); // print "{enumMember:1}
 
 Install package using composer:
 ```bash
-composer require palshin/enum
+composer require epalshin/enum
 ```
 
 ## Usage
