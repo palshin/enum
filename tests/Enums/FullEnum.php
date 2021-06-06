@@ -10,7 +10,7 @@ use Palshin\Enum\Enum;
  */
 class FullEnum extends Enum
 {
-  protected static function values(): array
+  public static function values(): array
   {
     return [
       'A' => 'FOO',

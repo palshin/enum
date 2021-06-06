@@ -6,7 +6,8 @@
   "authors": [
     {
       "name": "Eugene Palshin",
-      "email": "eo.palshin@gmail.com"
+      "email": "eo.palshin@gmail.com",
+      "role": "Developer"
     }
   ],
   "minimum-stability": "dev",
@@ -22,16 +23,17 @@
     }
   },
   "require": {
-    "php": "^7.4",
+    "php": "^8.0",
     "ext-json": "*"
   },
   "config": {
     "sort-packages": true
   },
   "require-dev": {
-    "friendsofphp/php-cs-fixer": "^2.16",
-    "phpunit/phpunit": "^9.4",
-    "vimeo/psalm": "^4.1"
+    "friendsofphp/php-cs-fixer": "^3.0",
+    "phpunit/phpunit": "^9.5",
+    "spatie/ray": "^1.10",
+    "vimeo/psalm": "^4.3"
   },
   "scripts": {
     "format": "vendor/bin/php-cs-fixer fix --allow-risky=yes",
