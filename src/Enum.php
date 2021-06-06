@@ -8,12 +8,11 @@ use Palshin\Enum\Exceptions\UndefinedPropertyEnumException;
 use Palshin\Enum\Exceptions\WritingToReadOnlyPropertyEnumException;
 use ReflectionClass;
 use ReflectionException;
-use TypeError;
 
 /**
  * Class Enum
  * @package Palshin\Enum
- * @property-read int|float|bool|string $value
+ * @property-read int|float|string $value
  * @property-read string $name
  * @property-read string $label
  * @property-read string|null $description
@@ -23,12 +22,12 @@ abstract class Enum implements JsonSerializable
   /**
    * @var array<string,array<string,static>>
    */
-  private static $enumMembers = [];
+  protected static array $enumMembers = [];
 
   /**
-   * @var int|float|bool|string
+   * @var int|float|string
    */
-  private $value;
+  protected int|float|string $value;
 
   /**
    * @var string
@@ -48,11 +47,10 @@ abstract class Enum implements JsonSerializable
   /**
    * Enum constructor.
    * @param string $name
-   * @param int|float|bool|string $value
+   * @param int|float|string $value
    */
-  private function __construct(string $name, $value)
+  private function __construct(string $name, int|float|string $value)
   {
-    self::checkValue($value);
     $this->name = $name;
     $this->value = $value;
     $this->label = static::labels()[$name] ?? $name;
@@ -60,16 +58,37 @@ abstract class Enum implements JsonSerializable
   }
 
   /**
-   * Return array of enum values
-   *
-   * @return array
-   * @throws ReflectionException
+   * @return array<string,string>
    */
-  public static function toValues(): array
+  public static function labels(): array
   {
-    return array_map(
-      fn ($enumMember) => $enumMember->value,
-      self::enumMembers()
+    return [];
+  }
+
+  /**
+   * @return array<string,string>
+   */
+  public static function descriptions(): array
+  {
+    return [];
+  }
+
+  /**
+   * @param string $name
+   * @param array $arguments
+   * @return static
+   */
+  public static function __callStatic(string $name, array $arguments): self
+  {
+    $enumMembers = self::enumMembers();
+    if (isset($enumMembers[$name])) {
+      return $enumMembers[$name];
+    }
+
+    $enumClass = static::class;
+
+    throw new BadMethodCallException(
+      "No found members for enum $enumClass which have name $name"
     );
   }
 
@@ -118,7 +137,7 @@ abstract class Enum implements JsonSerializable
 
   /**
    * @param array $values
-   * @return array<string,int|float|string|bool>
+   * @return array<string,int|float|string>
    */
   private static function getAutoIncrementedValues(array $values): array
   {
@@ -137,25 +156,9 @@ abstract class Enum implements JsonSerializable
   }
 
   /**
-   * @return array<string|int,int|float|bool|string>
+   * @return array<string,int|float|bool|string>
    */
-  protected static function values(): array
-  {
-    return [];
-  }
-
-  /**
-   * @return array<string,string>
-   */
-  protected static function labels(): array
-  {
-    return [];
-  }
-
-  /**
-   * @return array<string,string>
-   */
-  protected static function descriptions(): array
+  public static function values(): array
   {
     return [];
   }
@@ -170,7 +173,7 @@ abstract class Enum implements JsonSerializable
     preg_match_all($pattern, $docComment, $matches);
     foreach ($matches[1] as $index => $name) {
       $value = $matches[3][$index];
-      if (! empty($value)) {
+      if (!empty($value)) {
         $values[$name] = is_numeric($value) ? $value + 0 : $value;
       } else {
         $values[] = $name;
@@ -181,51 +184,36 @@ abstract class Enum implements JsonSerializable
   }
 
   /**
-   * Check possible values of enum members
-   *
-   * @param $value
-   * @return bool
-   */
-  private static function checkValue($value): bool
-  {
-    if (is_scalar($value)) {
-      return true;
-    }
-    $enumClass = static::class;
-
-    throw new TypeError("Only primitive values are allowed for enum $enumClass members");
-  }
-
-  /**
-   * @param string $name
-   * @param array $arguments
+   * @param int|float|string $value
    * @return static
    * @throws ReflectionException
    */
-  public static function __callStatic(string $name, array $arguments): self
+  public static function fromValue(int|float|string $value): self
   {
-    $enumMembers = self::enumMembers();
-    if (isset($enumMembers[$name])) {
-      return $enumMembers[$name];
-    }
-
-    $enumClass = static::class;
-
-    throw new BadMethodCallException(
-      "No found members for enum $enumClass which have name $name"
-    );
-  }
-
-  /**
-   * @param int|float|bool|string $value
-   * @return static
-   * @throws ReflectionException
-   */
-  public static function fromValue($value): self
-  {
-    $name = array_search($value, self::toValues());
+    $name = array_search($value, self::toArray());
 
     return self::fromName($name);
+  }
+
+  /**
+   * Return array of enum values
+   *
+   * @psalm-return array<int|float|string>
+   * @return array
+   */
+  public static function toValues(): array
+  {
+    return array_values(static::toArray());
+  }
+
+  public static function toArray(): array
+  {
+    $array = [];
+    foreach (self::enumMembers() as $enumMember) {
+      $array[$enumMember->name] = $enumMember->value;
+    }
+
+    return $array;
   }
 
   /**
@@ -238,10 +226,28 @@ abstract class Enum implements JsonSerializable
   }
 
   /**
-   * @param string $name
-   * @return bool|float|int|string|null
+   * @return string[]
    */
-  public function __get(string $name)
+  public static function toNames(): array
+  {
+    return array_keys(static::toArray());
+  }
+
+  /**
+   * Return all enum members
+   *
+   * @return array
+   */
+  public static function all(): array
+  {
+    return array_values(self::enumMembers());
+  }
+
+  /**
+   * @param string $name
+   * @return float|int|string|null
+   */
+  public function __get(string $name): float|int|string|null
   {
     if ($name === 'name') {
       return $this->name;
@@ -264,40 +270,28 @@ abstract class Enum implements JsonSerializable
    *
    * @param $name
    * @param $value
-   * @return null
+   * @throws WritingToReadOnlyPropertyEnumException
    */
-  public function __set($name, $value)
+  public function __set($name, $value): void
   {
     if (in_array($name, ['name', 'value', 'label', 'description'])) {
       throw new WritingToReadOnlyPropertyEnumException($name, static::class);
     }
   }
 
-  /**
-   * Return all enum members
-   *
-   * @return static[]
-   * @throws ReflectionException
-   */
-  public static function all(): array
-  {
-    return array_values(self::enumMembers());
-  }
-
-  /**
-   * @return string
-   */
-  public function __toString(): string
+  public function id(): string
   {
     $enumClass = static::class;
 
     return "$enumClass::{$this->name}";
   }
 
-  /**
-   * @return bool|float|int|string
-   */
-  public function jsonSerialize()
+  public function __toString(): string
+  {
+    return (string)$this->value;
+  }
+
+  public function jsonSerialize(): int|string|float
   {
     return $this->value;
   }
