@@ -10,8 +10,7 @@ use ReflectionClass;
 use ReflectionException;
 
 /**
- * Class Enum
- * @package Palshin\Enum
+ * Class Enum.
  * @property-read int|float|string $value
  * @property-read string $name
  * @property-read string $label
@@ -27,7 +26,7 @@ abstract class Enum implements JsonSerializable
   /**
    * @var int|float|string
    */
-  protected int|float|string $value;
+  protected int | float | string $value;
 
   /**
    * @var string
@@ -49,7 +48,7 @@ abstract class Enum implements JsonSerializable
    * @param string $name
    * @param int|float|string $value
    */
-  private function __construct(string $name, int|float|string $value)
+  private function __construct(string $name, int | float | string $value)
   {
     $this->name = $name;
     $this->value = $value;
@@ -112,7 +111,7 @@ abstract class Enum implements JsonSerializable
   }
 
   /**
-   * Return enum values implementing by class constants
+   * Return enum values implementing by class constants.
    *
    * @return array
    */
@@ -124,7 +123,7 @@ abstract class Enum implements JsonSerializable
   }
 
   /**
-   * Return enum values implementing by values function
+   * Return enum values implementing by values function.
    *
    * @return array
    */
@@ -173,7 +172,7 @@ abstract class Enum implements JsonSerializable
     preg_match_all($pattern, $docComment, $matches);
     foreach ($matches[1] as $index => $name) {
       $value = $matches[3][$index];
-      if (!empty($value)) {
+      if (! empty($value)) {
         $values[$name] = is_numeric($value) ? $value + 0 : $value;
       } else {
         $values[] = $name;
@@ -188,7 +187,7 @@ abstract class Enum implements JsonSerializable
    * @return static
    * @throws ReflectionException
    */
-  public static function fromValue(int|float|string $value): self
+  public static function fromValue(int | float | string $value): self
   {
     $name = array_search($value, self::toArray());
 
@@ -196,7 +195,7 @@ abstract class Enum implements JsonSerializable
   }
 
   /**
-   * Return array of enum values
+   * Return array of enum values.
    *
    * @psalm-return array<int|float|string>
    * @return array
@@ -234,7 +233,7 @@ abstract class Enum implements JsonSerializable
   }
 
   /**
-   * Return all enum members
+   * Return all enum members.
    *
    * @return array
    */
@@ -247,7 +246,7 @@ abstract class Enum implements JsonSerializable
    * @param string $name
    * @return float|int|string|null
    */
-  public function __get(string $name): float|int|string|null
+  public function __get(string $name): float | int | string | null
   {
     if ($name === 'name') {
       return $this->name;
@@ -266,7 +265,7 @@ abstract class Enum implements JsonSerializable
   }
 
   /**
-   * Prevent creating protected properties in successors
+   * Prevent creating protected properties in successors.
    *
    * @param $name
    * @param $value
@@ -288,10 +287,10 @@ abstract class Enum implements JsonSerializable
 
   public function __toString(): string
   {
-    return (string)$this->value;
+    return (string) $this->value;
   }
 
-  public function jsonSerialize(): int|string|float
+  public function jsonSerialize(): int | string | float
   {
     return $this->value;
   }

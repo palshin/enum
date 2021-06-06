@@ -2,7 +2,9 @@
 
 namespace Palshin\Enum\Exceptions;
 
-class EnumException extends \Exception
+use Exception;
+
+class EnumException extends Exception
 {
   public function __construct(string $message)
   {
