@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Palshin\Enum;
@@ -27,7 +28,7 @@ abstract class Enum implements JsonSerializable, Stringable
   /**
    * @var int|float|string
    */
-  protected int|float|string $value;
+  protected int | float | string $value;
 
   /**
    * @var string
@@ -49,7 +50,7 @@ abstract class Enum implements JsonSerializable, Stringable
    * @param string $name
    * @param int|float|string $value
    */
-  private function __construct(string $name, int|float|string $value)
+  private function __construct(string $name, int | float | string $value)
   {
     $this->name = $name;
     $this->value = $value;
@@ -171,7 +172,7 @@ abstract class Enum implements JsonSerializable, Stringable
     $pattern = '/@method[\s]+static[\s]+self[\s]([\w]+)\(\)[\s]+(=|)[\s]+([a-zA-Z0-9_.]+|)/';
     $reflection = new ReflectionClass(static::class);
     $docComment = $reflection->getDocComment();
-    if (!$docComment) {
+    if (! $docComment) {
       return [];
     }
 
@@ -179,7 +180,7 @@ abstract class Enum implements JsonSerializable, Stringable
     preg_match_all($pattern, $docComment, $matches);
     foreach ($matches[1] as $index => $name) {
       $value = $matches[3][$index];
-      if (!empty($value)) {
+      if (! empty($value)) {
         $values[$name] = is_numeric($value) ? $value + 0 : $value;
       } else {
         $values[] = $name;
@@ -189,11 +190,11 @@ abstract class Enum implements JsonSerializable, Stringable
     return self::getAutoIncrementedValues($values);
   }
 
-  public static function fromValue(int|float|string $value): static
+  public static function fromValue(int | float | string $value): static
   {
     $name = array_search($value, self::toArray());
 
-    if (!$name) {
+    if (! $name) {
       $enumClass = static::class;
       throw new InvalidArgumentException(
         "No found members for enum $enumClass which have value $value"
@@ -255,7 +256,7 @@ abstract class Enum implements JsonSerializable, Stringable
    * @return null|float|int|string
    * @throws UndefinedPropertyEnumException
    */
-  public function __get(string $name): string|int|float|null
+  public function __get(string $name): string | int | float | null
   {
     if ($name === 'name') {
       return $this->name;
@@ -294,10 +295,10 @@ abstract class Enum implements JsonSerializable, Stringable
 
   public function __toString(): string
   {
-    return (string)$this->value;
+    return (string) $this->value;
   }
 
-  public function jsonSerialize(): int|string|float
+  public function jsonSerialize(): int | string | float
   {
     return $this->value;
   }
