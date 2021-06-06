@@ -23,7 +23,7 @@ class EnumTest extends TestCase
 
   public function test_const_enum_can_return_value(): void
   {
-    $this->assertEquals(1, ConstEnum::FOO()->value);
+    $this->assertSame(1, ConstEnum::FOO()->value);
   }
 
   public function test_const_enum_can_return_all_values(): void
@@ -85,9 +85,17 @@ class EnumTest extends TestCase
 
   public function test_enum_member_string_represent(): void
   {
-    $this->assertEquals(
+    $this->assertSame(
       (string)DocCommentEnum::A()->value,
       (string)DocCommentEnum::A()
+    );
+  }
+
+  public function test_enum_member_id_method(): void
+  {
+    $this->assertSame(
+      'Palshin\Enum\Tests\Enums\FullEnum::A',
+      FullEnum::A()->id(),
     );
   }
 
@@ -158,12 +166,12 @@ class EnumTest extends TestCase
 
   public function test_values_func_override_doc_comment(): void
   {
-    $this->assertEquals('FOO', FullEnum::A()->value);
+    $this->assertSame('FOO', FullEnum::A()->value);
   }
 
   public function test_can_access_name(): void
   {
-    $this->assertEquals(
+    $this->assertSame(
       'A',
       FullEnum::A()->name
     );
@@ -171,7 +179,7 @@ class EnumTest extends TestCase
 
   public function test_can_access_value(): void
   {
-    $this->assertEquals(
+    $this->assertSame(
       'BAR',
       FullEnum::B()->value
     );
@@ -179,7 +187,7 @@ class EnumTest extends TestCase
 
   public function test_can_access_label(): void
   {
-    $this->assertEquals(
+    $this->assertSame(
       'A Label',
       FullEnum::A()->label
     );
@@ -187,7 +195,7 @@ class EnumTest extends TestCase
 
   public function test_can_access_description(): void
   {
-    $this->assertEquals(
+    $this->assertSame(
       'A description',
       FullEnum::A()->description
     );
