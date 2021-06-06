@@ -21,8 +21,11 @@ UserRole::MANAGER() instanceof UserRole; // true
 UserRole::MANAGER() === UserRole::MANAGER(); // true
 UserRole::MANAGER()->value; // 3
 UserRole::all(); // [ UserRole::CLIENT(), UserRole::ADMIN(), UserRole::MANAGER() ]
-UserRole::toValues(); // [ 'CLIENT' => 1, 'ADMIN' => 2, 'MANAGER' => 3 ]
-echo UserRole::CLIENT(); // print "UserRole::CLIENT"
+UserRole::toArray(); // [ 'CLIENT' => 1, 'ADMIN' => 2, 'MANAGER' => 3 ]
+UserRole::toValues(); // [1, 2, 3]
+UserRole::toNames(); // ['CLIENT', 'ADMIN', 'MANAGER']
+UserRole::CLIENT()->id(); // FQCN with enum member name: App\Enums\UserRole::CLIENT
+echo UserRole::CLIENT(); // print "1"
 echo json_encode(['enumMember' => UserRole::CLIENT()]); // print "{enumMember:1}"
 ```
 
@@ -68,7 +71,7 @@ use Palshin\Enum\Enum;
 
 final class UserRole extends Enum
 {
-  protected static function values(): array
+  public static function values(): array
   {
     return [
       'CLIENT' => 1,
@@ -91,7 +94,7 @@ final class UserRole extends Enum
 {
   private const ADMIN = 2;
 
-  protected static function values(): array
+  public static function values(): array
   {
     return [
       'MANAGER' => 3,
@@ -129,7 +132,7 @@ UserRole::CLIENT === 1; // true
 UserRole::CLIENT() instanceof UserRole; // true
 ```
 In some cases may be useful to add meta information to your
-enumaration class. You can do it like this:
+enumeration class. You can do it like this:
 
 ```php
 use Palshin\Enum\Enum;
