@@ -1,5 +1,5 @@
 <?php
-
+declare(strict_types=1);
 namespace Palshin\Enum\Exceptions;
 
 class UndefinedPropertyEnumException extends EnumException
